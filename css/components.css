@@ -1,0 +1,497 @@
+/* ==========================================================================
+   AETHERIA - UI Components, Docks, Modals & Panels
+   ========================================================================== */
+
+/* Top Navigation Bar */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.brand-section {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 8px 18px;
+    border-radius: var(--radius-full);
+}
+
+.brand-orb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #fde047 0%, #38bdf8 100%);
+    box-shadow: 0 0 12px #38bdf8;
+    animation: orbPulse 3s infinite ease-in-out;
+}
+
+.brand-title {
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    background: linear-gradient(135deg, #ffffff 40%, #bae6fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.time-indicator {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    border-left: 1px solid var(--glass-border);
+    padding-left: 10px;
+}
+
+/* Weather Switch Pills */
+.weather-pills {
+    display: flex;
+    padding: 4px;
+    border-radius: var(--radius-full);
+    gap: 4px;
+}
+
+.weather-pill {
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: var(--radius-full);
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.weather-pill:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.weather-pill.active {
+    background: rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    font-weight: 500;
+}
+
+/* Right Status Area */
+.status-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.shard-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--radius-full);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gold);
+    text-shadow: 0 0 10px rgba(253, 224, 71, 0.4);
+}
+
+/* Bottom Creator Dock */
+.bottom-dock-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.creator-dock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: var(--radius-full);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.tool-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all var(--transition-smooth);
+}
+
+.tool-btn .tool-icon {
+    font-size: 20px;
+    margin-bottom: 2px;
+    transition: transform var(--transition-bounce);
+}
+
+.tool-btn .tool-label {
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.tool-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-main);
+    transform: translateY(-3px);
+}
+
+.tool-btn:hover .tool-icon {
+    transform: scale(1.2);
+}
+
+.tool-btn.active {
+    background: rgba(56, 189, 248, 0.22);
+    border-color: rgba(56, 189, 248, 0.6);
+    color: #ffffff;
+    box-shadow: 0 0 18px rgba(56, 189, 248, 0.35);
+}
+
+.dock-separator {
+    width: 1px;
+    height: 36px;
+    background: var(--glass-border);
+    margin: 0 4px;
+}
+
+/* Time Dial Slider Bar */
+.time-slider-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.time-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 110px;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    outline: none;
+    cursor: pointer;
+}
+
+.time-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fde047;
+    box-shadow: 0 0 8px #eab308;
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+}
+
+.time-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+}
+
+/* Floating Right Hub */
+.floating-hub {
+    position: absolute;
+    right: 32px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 15;
+}
+
+.hub-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.hub-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: 58px;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid var(--glass-border);
+    padding: 5px 10px;
+    border-radius: var(--radius-sm);
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-fast);
+}
+
+.hub-btn:hover::after {
+    opacity: 1;
+}
+
+/* Modal Windows & Drawers */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(3, 7, 18, 0.7);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-smooth);
+}
+
+.modal-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.modal-card {
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    width: 90%;
+    max-width: 580px;
+    position: relative;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 22px;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.modal-close:hover {
+    color: #ffffff;
+}
+
+/* Seed Selection Drawer */
+.seed-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.seed-card {
+    padding: 16px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-smooth);
+}
+
+.seed-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.seed-card.selected {
+    border-color: var(--primary);
+    background: rgba(56, 189, 248, 0.15);
+    box-shadow: 0 0 16px var(--glass-glow);
+}
+
+.seed-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+}
+
+.seed-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.seed-latin {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-style: italic;
+}
+
+/* Codex Compendium Grid */
+.codex-tabs {
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+}
+
+.codex-tab {
+    padding: 6px 14px;
+    font-size: 13px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.codex-tab.active {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.codex-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.codex-item {
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.codex-item.locked {
+    opacity: 0.45;
+    filter: grayscale(0.8);
+}
+
+.codex-icon {
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.codex-info {
+    flex: 1;
+}
+
+.codex-name {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.codex-desc {
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+/* Stargazer Constellation Puzzle Canvas */
+#constellationCanvas {
+    width: 100%;
+    height: 380px;
+    border-radius: var(--radius-md);
+    background: radial-gradient(circle, #0f172a 0%, #020617 100%);
+    border: 1px solid var(--glass-border);
+    cursor: crosshair;
+}
+
+/* Polaroid Preview Stage */
+.polaroid-preview-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+
+#polaroidImg {
+    max-width: 320px;
+    border-radius: 4px;
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
+.polaroid-filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 16px 0;
+}
+
+/* Toast Notifications */
+#toastContainer {
+    position: fixed;
+    top: 28px;
+    right: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 200;
+    pointer-events: none;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border-radius: var(--radius-md);
+    background: rgba(15, 23, 42, 0.88);
+    border: 1px solid var(--primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px var(--glass-glow);
+    color: #ffffff;
+    font-size: 13px;
+    pointer-events: auto;
+    animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.toast-icon {
+    font-size: 20px;
+}
+
+.toast-title {
+    font-weight: 600;
+    color: var(--primary);
+    font-size: 12px;
+}

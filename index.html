@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>AETHERIA · 浮光秘境 - 悬岛生态与星穹回响</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Shutter White Flash Effect -->
+    <div id="shutterOverlay" class="shutter-effect"></div>
+
+    <!-- Main 60fps Canvas Viewport -->
+    <canvas id="renderCanvas"></canvas>
+
+    <!-- Interactive HUD Overlay -->
+    <div id="hudLayer">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <!-- Brand & Time Section -->
+            <div class="brand-section glass-panel">
+                <div class="brand-orb"></div>
+                <span class="brand-title">AETHERIA · 浮光秘境</span>
+                <span id="timeDisplay" class="time-indicator">14:00 · 盛昼</span>
+            </div>
+
+            <!-- Weather Switch Pills -->
+            <div class="weather-pills glass-panel">
+                <button class="weather-pill active" data-weather="clear">☀️ 晴空</button>
+                <button class="weather-pill" data-weather="rain">🌧️ 仙霖</button>
+                <button class="weather-pill" data-weather="snow">❄️ 晶雪</button>
+                <button class="weather-pill" data-weather="blossom">🌸 绯樱</button>
+                <button class="weather-pill" data-weather="stardust">🌌 星尘</button>
+            </div>
+
+            <!-- Time Dial & Status Area -->
+            <div class="status-area">
+                <div class="time-slider-wrapper glass-panel">
+                    <span>⏳ 刻度</span>
+                    <input type="range" id="timeSlider" class="time-slider" min="0" max="24" step="0.1" value="14">
+                    <button id="timeLapseBtn" class="glass-btn" style="padding: 3px 8px; font-size: 11px;">▶ 巡航</button>
+                    <button id="syncTimeBtn" class="glass-btn" style="padding: 3px 8px; font-size: 11px;">同步现实</button>
+                </div>
+
+                <div class="shard-badge glass-panel">
+                    <span>✨</span>
+                    <span id="shardCount">15</span>
+                </div>
+
+                <button id="audioToggleBtn" class="glass-btn" title="声音开关">🔊</button>
+                <button id="zenToggleBtn" class="glass-btn" title="全屏禅意模式 (Z键 / ESC 退出)">🍃 禅境</button>
+            </div>
+        </header>
+
+        <!-- Bottom Creator Dock -->
+        <footer class="bottom-dock-wrapper">
+            <div class="creator-dock glass-panel">
+                <button class="tool-btn active" data-tool="pipette" title="甘露宝珠：凝聚露珠润养泥土与灵泉 (快捷键 1)">
+                    <span class="tool-icon">💧</span>
+                    <span class="tool-label">甘露</span>
+                </button>
+                <button class="tool-btn" data-tool="sol" title="日华棱镜：聚焦天光暖阳，加速花苞盛开 (快捷键 2)">
+                    <span class="tool-icon">☀️</span>
+                    <span class="tool-label">日华</span>
+                </button>
+                <button class="tool-btn" data-tool="wind" title="灵风拂拂：轻抚草木枝条，引动风铃清音 (快捷键 3)">
+                    <span class="tool-icon">🍃</span>
+                    <span class="tool-label">灵风</span>
+                </button>
+                <button class="tool-btn" data-tool="bell" title="共振之音：敲响空灵清音，唤醒草木共鸣 (快捷键 4)">
+                    <span class="tool-icon">🎵</span>
+                    <span class="tool-label">共振</span>
+                </button>
+                <button class="tool-btn" data-tool="scythe" title="采撷星尘：采收盛开花瓣孕育的星尘结晶 (快捷键 5)">
+                    <span class="tool-icon">✂️</span>
+                    <span class="tool-label">采撷</span>
+                </button>
+                <div class="dock-separator"></div>
+                <button id="openSeedDrawerBtn" class="tool-btn" title="育种宝袋：在悬岛泥土中播撒珍奇种子">
+                    <span class="tool-icon">🌱</span>
+                    <span class="tool-label">育种</span>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Floating Right Hub -->
+    <aside class="floating-hub">
+        <button id="openOracleBtn" class="glass-btn hub-btn" data-tooltip="晨光星语与神谕">🔮</button>
+        <button id="openCodexBtn" class="glass-btn hub-btn" data-tooltip="星辰档案与图鉴">📖</button>
+        <button id="openStargazerBtn" class="glass-btn hub-btn" data-tooltip="星象仪解谜">🔭</button>
+        <button id="openCameraBtn" class="glass-btn hub-btn" data-tooltip="留影机">📷</button>
+        <button id="openMixerBtn" class="glass-btn hub-btn" data-tooltip="音愈工坊">🎧</button>
+    </aside>
+
+    <!-- Seed Selection Modal -->
+    <div id="seedModal" class="modal-overlay">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <div class="modal-title">🌱 育种宝袋 · 挑选灵种</div>
+                <button class="modal-close" data-close="seedModal">&times;</button>
+            </div>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                选择物种后在悬岛任意土壤或水池中植下。用「采撷」收获成熟花瓣可赚取星尘结晶。
+            </p>
+            <div class="seed-grid" id="seedGridContainer"></div>
+        </div>
+    </div>
+
+    <!-- Codex & Achievements Modal -->
+    <div id="codexModal" class="modal-overlay">
+        <div class="modal-card glass-panel">
+            <div class="modal-header">
+                <div class="modal-title">📖 星辰档案 · 生态万象</div>
+                <button class="modal-close" data-close="codexModal">&times;</button>
+            </div>
+            <div class="codex-tabs">
+                <button class="codex-tab active" data-tab="flora">草木奇卉</button>
+                <button class="codex-tab" data-tab="fauna">灵动生灵</button>
+                <button class="codex-tab" data-tab="celestial">天象异景</button>
+                <button class="codex-tab" data-tab="relic">远古遗珍</button>
+                <button class="codex-tab" data-tab="achievements">探索印记</button>
+            </div>
+            <div id="codexListContainer" class="codex-grid"></div>
+        </div>
+    </div>
+
+    <!-- Stargazer Constellation Modal -->
+    <div id="stargazerModal" class="modal-overlay">
+        <div class="modal-card glass-panel" style="max-width: 640px;">
+            <div class="modal-header">
+                <div class="modal-title">🔭 星象司南仪 · 绘制远古星图</div>
+                <button class="modal-close" data-close="stargazerModal">&times;</button>
+            </div>
+            <p id="constellationDesc" style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">
+                点击相邻发光的恒星，以星光引线连缀出神圣星相，点亮深空的神恩祝福。
+            </p>
+            <canvas id="constellationCanvas" width="580" height="380"></canvas>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 14px;">
+                <button id="prevConstellationBtn" class="glass-btn">◀ 上一星宿</button>
+                <span id="constellationTitle" style="font-weight: 600; font-size: 14px; color: var(--primary);">星海幻鳐座</span>
+                <button id="nextConstellationBtn" class="glass-btn">下一星宿 ▶</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Polaroid Photo Studio Modal -->
+    <div id="cameraModal" class="modal-overlay">
+        <div class="modal-card glass-panel" style="max-width: 480px; text-align: center;">
+            <div class="modal-header">
+                <div class="modal-title">📷 留影机 · 晨光印记</div>
+                <button class="modal-close" data-close="cameraModal">&times;</button>
+            </div>
+            <div class="polaroid-preview-box">
+                <img id="polaroidImg" src="" alt="Polaroid Snapshot">
+            </div>
+            <div class="polaroid-filters">
+                <button class="glass-btn filter-btn active" data-filter="normal">清透原色</button>
+                <button class="glass-btn filter-btn" data-filter="golden">琥珀晨昏</button>
+                <button class="glass-btn filter-btn" data-filter="cyanotype">青石夜影</button>
+                <button class="glass-btn filter-btn" data-filter="dream">梦境柔焦</button>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 16px;">
+                <button id="retakePhotoBtn" class="glass-btn">🔄 重新定格</button>
+                <button id="savePhotoBtn" class="glass-btn" style="background: rgba(56, 189, 248, 0.3); border-color: var(--primary);">
+                    💾 保存珍藏照片
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Soundscape Mixer Modal -->
+    <div id="mixerModal" class="modal-overlay">
+        <div class="modal-card glass-panel" style="max-width: 480px;">
+            <div class="modal-header">
+                <div class="modal-title">🎧 灵感之声 · 氛围音愈工坊</div>
+                <button class="modal-close" data-close="mixerModal">&times;</button>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                纯 Web Audio API 算法实时声学合成，立体声空间渲染。随时调节属于你的专属听觉冥想空间。
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px;">空灵主弦乐 (Ambient Pad)</span>
+                    <input type="range" class="time-slider" id="volPad" min="0" max="1" step="0.05" value="0.5">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px;">以太清风 (Wind Breeze)</span>
+                    <input type="range" class="time-slider" id="volWind" min="0" max="1" step="0.05" value="0.2">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px;">琉璃细雨 (Rain on Glass)</span>
+                    <input type="range" class="time-slider" id="volRain" min="0" max="1" step="0.05" value="0.0">
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 13px;">昼鸟与夜蛩 (Living Fauna)</span>
+                    <input type="range" class="time-slider" id="volFauna" min="0" max="1" step="0.05" value="0.6">
+                </div>
+                <div style="height: 1px; background: var(--glass-border); margin: 6px 0;"></div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 13px; font-weight: 500;">阿尔法双耳节拍 (10Hz Alpha Waves)</div>
+                        <div style="font-size: 11px; color: var(--text-dim);">佩戴耳机获得最佳深度放松与专注体验</div>
+                    </div>
+                    <button id="toggleBinauralBtn" class="glass-btn">开启</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Oracle & Morning Wisdom Modal -->
+    <div id="oracleModal" class="modal-overlay">
+        <div class="modal-card glass-panel" style="max-width: 460px; text-align: center;">
+            <div class="modal-header">
+                <div class="modal-title">🔮 晨光星语 · 今日神谕箴言</div>
+                <button class="modal-close" data-close="oracleModal">&times;</button>
+            </div>
+            <div style="padding: 24px; border-radius: var(--radius-md); background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(253, 224, 71, 0.35); box-shadow: inset 0 0 24px rgba(253, 224, 71, 0.1);">
+                <div id="oracleSign" style="font-size: 13px; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px;">🌅 晨光破晓 · 乙木向荣</div>
+                <h2 id="oracleTitle" class="shimmer-text" style="font-size: 20px; margin-bottom: 14px;">【破晓生机 · Dawn Genesis】</h2>
+                <p id="oracleGuidance" style="font-size: 13px; color: #f8fafc; line-height: 1.6; margin-bottom: 14px;">
+                    沉睡的种子在长夜中积蓄的力量，终将在第一缕晨曦拂晓时破土而出。新的灵感正在萌芽，无需畏惧起点微小。
+                </p>
+                <div id="oracleAdvice" style="font-size: 12px; color: #38bdf8; margin-bottom: 12px; font-weight: 500;">
+                    今日宜：开启新计划、专注创作、饮清晨第一杯温水。
+                </div>
+                <div id="oracleLucky" style="font-size: 11px; color: var(--text-dim); border-top: 1px solid var(--glass-border); padding-top: 10px;">
+                    灵植：星辉幼蕨 · 幸运频段：432Hz · 幸运色：晨曦天青
+                </div>
+            </div>
+            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 18px;">
+                <button id="drawAnotherOracleBtn" class="glass-btn">🎲 重新感应星语</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome / Click to Awaken Screen -->
+    <div id="welcomeScreen" class="modal-overlay open">
+        <div class="modal-card glass-panel" style="text-align: center; max-width: 520px;">
+            <div style="font-size: 42px; margin-bottom: 12px;" class="float-item">✨</div>
+            <h1 class="shimmer-text" style="font-size: 24px; margin-bottom: 10px; letter-spacing: 2px;">AETHERIA · 浮光秘境</h1>
+            <p style="font-size: 14px; color: #bae6fd; line-height: 1.6; margin-bottom: 24px;">
+                微缩的浮空生态瓶已在晨曦中苏醒。<br>
+                这里有依昼夜开合的花木、在以太泉水中巡游的幻光锦鲤，以及随微风自鸣的天籁风铃。
+            </p>
+            <button id="awakenBtn" class="glass-btn" style="padding: 12px 32px; font-size: 15px; font-weight: 600; border-color: var(--primary); background: rgba(56, 189, 248, 0.25); box-shadow: 0 0 24px rgba(56, 189, 248, 0.4);">
+                💫 唤醒生命之声并踏入秘境
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer"></div>
+
+    <!-- Core Scripts -->
+    <script src="js/audio/synth.js"></script>
+    <script src="js/audio/soundscape.js"></script>
+    <script src="js/engine/particles.js"></script>
+    <script src="js/engine/weather.js"></script>
+    <script src="js/simulation/ecosystem.js"></script>
+    <script src="js/simulation/creatures.js"></script>
+    <script src="js/engine/physics.js"></script>
+    <script src="js/engine/canvas.js"></script>
+    <script src="js/features/codex.js"></script>
+    <script src="js/features/stargazer.js"></script>
+    <script src="js/features/camera.js"></script>
+    <script src="js/features/oracle.js"></script>
+    <script src="js/features/storage.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
